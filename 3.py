@@ -43,7 +43,7 @@ response.raise_for_status()
 data = pd.read_csv(io.StringIO(response.text))
     
 # Procesar los datos
- processed_data = data.apply(extract_info, axis=1, result_type='expand')
+processed_data = data.apply(extract_info, axis=1, result_type='expand')
     
 st.write("Datos procesados:")
 st.dataframe(processed_data)
