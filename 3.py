@@ -19,7 +19,7 @@ def leer_csv_desde_url(url):
   return df
 
 # Ejemplo de uso:
-url_archivo = "https://raw.githubusercontent.com/gabrielawad/programacion-para-ingenieria/main/archivos-datos/regex/regex_productos.csv"
+url_archivo = "https://github.com/gabrielawad/programacion-para-ingenieria/blob/main/archivos-datos/regex/regex_productos.csv"
 df = leer_csv_desde_url(url_archivo)
 
 print(df)
