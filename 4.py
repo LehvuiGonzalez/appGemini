@@ -11,26 +11,27 @@ def buscar_contexto(texto, palabra, contexto=30):
 # Función para buscar libros usando Google Books API
 def buscar_libros(consulta):
     url = "https://www.googleapis.com/books/v1/volumes"
-    params = {"q": consulta, "maxResults": 5}  # Cambia maxResults si quieres más resultados
+    params = {"q": consulta, "maxResults": 5}
     respuesta = requests.get(url, params=params)
     if respuesta.status_code == 200:
-        return respuesta.json()["items"]
-    return None
+        datos = respuesta.json()
+        return datos.get("items", [])
+    else:
+        st.error("Error al conectar con Google Books API.")
+        return None
 
-# Función para descargar contenido del libro (si está disponible)
-def obtener_contenido_libro(libro_id):
-    url = f"https://www.googleapis.com/books/v1/volumes/{libro_id}"
-    respuesta = requests.get(url)
-    if respuesta.status_code == 200:
-        libro = respuesta.json()
-        if "textSnippet" in libro.get("searchInfo", {}):
-            return libro["searchInfo"]["textSnippet"]
-        elif "description" in libro.get("volumeInfo", {}):
-            return libro["volumeInfo"]["description"]
-    return "No se pudo obtener contenido para este libro."
+# Función para obtener contenido del libro
+def obtener_contenido_libro(libro):
+    # Buscamos en `description` o en un campo similar
+    if "description" in libro["volumeInfo"]:
+        return libro["volumeInfo"]["description"]
+    elif "searchInfo" in libro and "textSnippet" in libro["searchInfo"]:
+        return libro["searchInfo"]["textSnippet"]
+    else:
+        return None
 
 # Título de la app
-st.title("Buscador de contexto en libros online")
+st.title("Buscador de frases en libros online")
 
 # Entrada para buscar libros
 consulta = st.text_input("Busca un libro por título, autor o palabras clave:")
@@ -40,15 +41,15 @@ if consulta:
     libros = buscar_libros(consulta)
     
     if libros:
-        st.success(f"Se encontraron {len(libros)} libros. Selecciona uno para buscar:")
+        st.success(f"Se encontraron {len(libros)} libros. Selecciona uno para explorar:")
         
         # Mostrar los libros encontrados
-        opciones = {f"{libro['volumeInfo']['title']} - {libro['volumeInfo'].get('authors', ['Autor desconocido'])[0]}": libro["id"] for libro in libros}
+        opciones = {f"{libro['volumeInfo']['title']} - {libro['volumeInfo'].get('authors', ['Autor desconocido'])[0]}": libro for libro in libros}
         seleccion = st.selectbox("Selecciona un libro:", list(opciones.keys()))
         
         if seleccion:
-            libro_id = opciones[seleccion]
-            contenido = obtener_contenido_libro(libro_id)
+            libro = opciones[seleccion]
+            contenido = obtener_contenido_libro(libro)
             
             if contenido:
                 # Input para ingresar la palabra o frase de búsqueda
@@ -67,8 +68,8 @@ if consulta:
                             resultado_resaltado = resultado.replace(palabra, f"**{palabra}**")
                             st.markdown(f"**{i}.** ...{resultado_resaltado}...")
                     else:
-                        st.error("No se encontraron coincidencias.")
+                        st.error("No se encontraron coincidencias en el texto del libro.")
             else:
-                st.error("No se pudo obtener el contenido del libro seleccionado.")
+                st.warning("No se pudo obtener contenido relevante del libro seleccionado.")
     else:
         st.error("No se encontraron libros. Intenta con otra consulta.")
