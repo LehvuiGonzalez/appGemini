@@ -42,7 +42,7 @@ def evaluar_contrasena(contrasena):
         return f"Tu contraseña podría ser más segura. Te sugerimos: {', '.join(sugerencias)}"
 
 # Interfaz de usuario con Streamlit
-st.title("Evaluador de Contraseñas")
+st.title("Evaluador de Contraseñas por Lehvui Gonzalez")
 contrasena = st.text_input("Ingrese su contraseña:")
 
 if contrasena:
