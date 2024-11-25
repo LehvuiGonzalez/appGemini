@@ -37,26 +37,26 @@ st.title("Procesamiento de Productos con Regex")
 
 url = "https://github.com/gabrielawad/programacion-para-ingenieria/blob/main/archivos-datos/regex/regex_productos.csv"
 
-    # Leer el archivo subido
-     response = requests.get(url)
-    response.raise_for_status()
-    data = pd.read_csv(io.StringIO(response.text))
+# Leer el archivo subido
+response = requests.get(url)
+response.raise_for_status()
+data = pd.read_csv(io.StringIO(response.text))
     
-    # Procesar los datos
-    processed_data = data.apply(extract_info, axis=1, result_type='expand')
+# Procesar los datos
+ processed_data = data.apply(extract_info, axis=1, result_type='expand')
     
-    st.write("Datos procesados:")
-    st.dataframe(processed_data)
+st.write("Datos procesados:")
+st.dataframe(processed_data)
     
-    # Generar archivo Excel en memoria
-    output = io.BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        processed_data.to_excel(writer, index=False, sheet_name='Productos')
+# Generar archivo Excel en memoria
+output = io.BytesIO()
+with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    processed_data.to_excel(writer, index=False, sheet_name='Productos')
     
-    # Botón para descargar el archivo
-    st.download_button(
-        label="Descargar archivo Excel",
-        data=output.getvalue(),
-        file_name="productos_procesados.xlsx",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+ # Botón para descargar el archivo
+st.download_button(
+    label="Descargar archivo Excel",
+    data=output.getvalue(),
+    file_name="productos_procesados.xlsx",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
