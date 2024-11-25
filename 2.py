@@ -50,7 +50,7 @@ def validar_fecha(fecha):
     return re.match(patron, fecha) is not None
 
 # Interfaz de usuario con Streamlit
-st.title("Formulario de Validación")
+st.title("Formulario de Validación por Lehvui Gonzalez")
 
 nombre = st.text_input("Nombre:")
 email = st.text_input("Correo electrónico:")
