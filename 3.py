@@ -24,13 +24,24 @@ def extract_info(row):
     values = re.findall(value_pattern, row_text)
     names = re.findall(name_pattern, row_text)
     
+    # Separamos los contactos por comas (si hay varios)
+    contacts = ', '.join(emails + phones + names[1:]) if emails or phones or names[1:] else None
+    contacts_list = contacts.split(', ') if contacts else []
+
+    # Asignamos cada tipo de contacto a una columna
+    contact_columns = {
+        'Email': contacts_list[0] if len(contacts_list) > 0 else None,
+        'Telefono': contacts_list[1] if len(contacts_list) > 1 else None,
+        'Nombre adicional': contacts_list[2] if len(contacts_list) > 2 else None,
+    }
+    
     # Tomar el primero de cada tipo, si existe
     return {
         'Número de serie': serials[0] if serials else None,
         'Nombre del producto': names[0] if names else None,
         'Valor': values[0] if values else None,
         'Fecha de compra': dates[0] if dates else None,
-        'Contacto': ', '.join(emails + phones + names[1:]) if emails or phones or names[1:] else None,
+        **contact_columns  # Desempaqueta las columnas de contacto en el diccionario de resultados
     }
 
 # Configuración de la app
@@ -54,10 +65,11 @@ output = io.BytesIO()
 with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
     processed_data.to_excel(writer, index=False, sheet_name='Productos')
     
- # Botón para descargar el archivo
+# Botón para descargar el archivo
 st.download_button(
     label="Descargar archivo Excel",
     data=output.getvalue(),
     file_name="productos_procesados.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+
