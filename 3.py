@@ -34,16 +34,13 @@ def extract_info(row):
 
 # Configuración de la app
 st.title("Procesamiento de Productos con Regex")
-st.write("Sube un archivo CSV con datos desordenados, y esta app extraerá información estructurada y generará un archivo Excel para descargar.")
 
-# Subir archivo CSV
-uploaded_file = st.file_uploader("Sube tu archivo CSV", type="csv")
+url = "https://github.com/gabrielawad/programacion-para-ingenieria/blob/main/archivos-datos/regex/regex_productos.csv"
 
-if uploaded_file is not None:
     # Leer el archivo subido
-    data = pd.read_csv(uploaded_file)
-    st.write("Vista previa del archivo subido:")
-    st.dataframe(data.head())
+     response = requests.get(url)
+    response.raise_for_status()
+    data = pd.read_csv(io.StringIO(response.text))
     
     # Procesar los datos
     processed_data = data.apply(extract_info, axis=1, result_type='expand')
