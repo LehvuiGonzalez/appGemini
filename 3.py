@@ -36,7 +36,7 @@ def extract_info(row):
 # Configuración de la app
 st.title("Procesamiento de Productos con Regex")
 
-url = "https://github.com/gabrielawad/programacion-para-ingenieria/blob/main/archivos-datos/regex/regex_productos.csv"
+url = "https://raw.githubusercontent.com/gabrielawad/programacion-para-ingenieria/main/archivos-datos/regex/regex_productos.csv"
 
 # Leer el archivo subido
 response = requests.get(url)
