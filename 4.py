@@ -4,6 +4,9 @@ import re
 # Título de la aplicación
 st.title("Buscador de Patrones en Textos")
 
+# Información sobre el autor
+st.write("Autor: Lehvui González Cardona")
+
 # Explicación de la aplicación
 st.write("""
     Esta aplicación te permite cargar un archivo de texto o ingresar texto manualmente.
@@ -44,4 +47,3 @@ if texto and patron:
         st.write(resultados)
     else:
         st.error("No se encontraron coincidencias.")
-
